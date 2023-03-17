@@ -48,17 +48,19 @@
             const axesHelper = new THREE.AxesHelper( 5 );
             scene.add( axesHelper );
 
+            //Camera position
             camera.position.z = 10;
             camera.position.y = 20;
             camera.position.x = 20;
 
+            //Orbit
             const controls = new OrbitControls( camera, renderer.domElement );
             controls.minDistance = 1;
             controls.maxDistance = 50;
             controls.update();
 
+            //Resize rendering with window
             window.addEventListener('resize', onWindowResize);
-
             function onWindowResize(){
                 camera.aspect = window.innerWidth/window.innerHeight;
                 camera.updateProjectionMatrix();
