@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+
+
+        <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+
+        <script type="importmap">
+        {
+            "imports": {
+                "three/addons/": "https://unpkg.com/three/examples/jsm/",
+            "three": "https://unpkg.com/three/build/three.module.js"
+            }
+        }
+        </script>
+
+        <script type="module">
+            import * as THREE from 'three';
+            import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+            const renderer = new THREE.WebGLRenderer({antialias:true});
+            renderer.setSize( window.innerWidth, window.innerHeight );
+
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+            document.body.appendChild( renderer.domElement );
+
+            const geometry = new THREE.TorusKnotGeometry( 10, 3, 100, 16 );
+            const material = new THREE.MeshPhongMaterial( { color: 0xffff00, wireframe:false } );
+            const torusKnot = new THREE.Mesh( geometry, material );
+            scene.add( torusKnot );
+            
+            const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+            scene.add( directionalLight );
+
+            const axesHelper = new THREE.AxesHelper( 5 );
+            scene.add( axesHelper );
+
+            camera.position.z = 10;
+            camera.position.y = 20;
+            camera.position.x = 20;
+
+            const controls = new OrbitControls( camera, renderer.domElement );
+            controls.minDistance = 1;
+            controls.maxDistance = 50;
+            controls.update();
+
+            window.addEventListener('resize', onWindowResize);
+
+            function onWindowResize(){
+                camera.aspect = window.innerWidth/window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+
+            camera.lookAt(axesHelper.position);
+
+            function animate() {
+                requestAnimationFrame( animate );
+                controls.update();
+                renderer.render( scene, camera );
+            }
+            animate();
+        </script>
+	</body>
+</html>
