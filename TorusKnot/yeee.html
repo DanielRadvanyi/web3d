@@ -22,24 +22,28 @@
         </script>
 
         <script type="module">
+            //imports
             import * as THREE from 'three';
             import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+            //declare essentials
             const renderer = new THREE.WebGLRenderer({antialias:true});
             renderer.setSize( window.innerWidth, window.innerHeight );
-
-
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
             document.body.appendChild( renderer.domElement );
 
+            //Create torus knot
             const geometry = new THREE.TorusKnotGeometry( 10, 3, 100, 16 );
             const material = new THREE.MeshPhongMaterial( { color: 0xffff00, wireframe:false } );
             const torusKnot = new THREE.Mesh( geometry, material );
             scene.add( torusKnot );
             
+            //Add lighting
             const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
             scene.add( directionalLight );
+            const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+            scene.add( light );
 
             const axesHelper = new THREE.AxesHelper( 5 );
             scene.add( axesHelper );
