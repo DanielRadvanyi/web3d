@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+
+
+        <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+
+        <script type="importmap">
+        {
+            "imports": {
+                "three/addons/": "https://unpkg.com/three/examples/jsm/",
+                "three": "https://unpkg.com/three/build/three.module.js"
+            }
+        }
+        </script>
+
+        <script type="module">
+            //imports
+            import * as THREE from 'three';
+            import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+            import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+            //declare essentials
+            const renderer = new THREE.WebGLRenderer({antialias:true});
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            renderer.setClearColor('rgb(1,84,184,184)');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+            document.body.appendChild( renderer.domElement );
+
+            //load model
+            let walrus, barrel;
+            const loader = new GLTFLoader().setPath( 'models/' );
+            loader.load( 'Walrus.glb', function ( gltf ) {
+                gltf.scene.scale.set(10,10,10);
+                walrus = gltf.scene;
+                scene.add(walrus);
+            } );
+            loader.load( 'barrel.glb', function ( gltf ) {
+                gltf.scene.scale.set(3,3,3);
+                barrel = gltf.scene;
+                barrel.position.x = 14;
+                scene.add(barrel);
+            } );
+            //Add lighting
+            const directionalLight = new THREE.DirectionalLight( 0xffffff, 2 );
+            scene.add( directionalLight );
+            const light = new THREE.AmbientLight( 0x804040 ); // soft white light
+            scene.add( light );
+
+            const axesHelper = new THREE.AxesHelper( 5 );
+            scene.add( axesHelper );
+
+            //Camera position
+            camera.position.z = 10;
+            camera.position.y = 20;
+            camera.position.x = 20;
+
+            //Orbit
+            const controls = new OrbitControls( camera, renderer.domElement );
+            controls.minDistance = 1;
+            controls.maxDistance = 50;
+            controls.update();
+
+            //Resize rendering with window
+            window.addEventListener('resize', onWindowResize);
+            function onWindowResize(){
+                camera.aspect = window.innerWidth/window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+
+            camera.lookAt(axesHelper.position);
+
+            function animate() {
+                requestAnimationFrame( animate );
+                controls.update();
+                renderer.render( scene, camera );
+            }
+            animate();
+        </script>
+	</body>
+</html>
